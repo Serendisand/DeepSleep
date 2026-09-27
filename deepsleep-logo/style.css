@@ -1,4 +1,7 @@
 .deepsleep-svg {
+  width: auto !important;
+  max-width: none !important;
+  flex-shrink: 0;
   display: inline-block;
   vertical-align: middle;
 }

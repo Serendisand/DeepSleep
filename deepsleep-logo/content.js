@@ -67,13 +67,31 @@
     svg.replaceWith(tmp.firstElementChild);
   }
 
+  function fixPlaceholder(root) {
+    const areas = root.querySelectorAll
+      ? root.querySelectorAll('textarea[placeholder*="DeepSeek"]')
+      : [];
+    areas.forEach((el) => {
+      if (el.dataset.deepsleepPH) return;
+      el.dataset.deepsleepPH = "1";
+      el.placeholder = el.placeholder.replace(/DeepSeek/g, "DeepSleep");
+    });
+  }
+
   function scan(root) {
     if (root.nodeType !== 1) return;
     if (root.tagName === "svg") replace(root);
     if (root.querySelectorAll) root.querySelectorAll("svg").forEach(replace);
+    if (root.tagName === "TEXTAREA") fixPlaceholder(root.parentNode || root);
+    fixPlaceholder(root);
   }
 
   scan(document.body);
   new MutationObserver((m) => m.forEach((x) => x.addedNodes.forEach(scan)))
-    .observe(document.body, { childList: true, subtree: true });
+    .observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["placeholder"],
+    });
 })();
