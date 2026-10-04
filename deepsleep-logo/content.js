@@ -78,12 +78,29 @@
     });
   }
 
+  function fixTitle() {
+    if (document.title.includes("DeepSeek")) {
+      document.title = document.title.replace(/DeepSeek/g, "DeepSleep");
+    }
+  }
+
+  function fixMeta() {
+    document.querySelectorAll('meta[content*="DeepSeek"]').forEach((m) => {
+      m.setAttribute(
+        "content",
+        m.getAttribute("content").replace(/DeepSeek/g, "DeepSleep")
+      );
+    });
+  }
+
   function scan(root) {
     if (root.nodeType !== 1) return;
     if (root.tagName === "svg") replace(root);
     if (root.querySelectorAll) root.querySelectorAll("svg").forEach(replace);
     if (root.tagName === "TEXTAREA") fixPlaceholder(root.parentNode || root);
     fixPlaceholder(root);
+    fixTitle();
+    fixMeta();
   }
 
   scan(document.body);
@@ -94,4 +111,6 @@
       attributes: true,
       attributeFilter: ["placeholder"],
     });
+
+  setInterval(fixTitle, 500);
 })();
